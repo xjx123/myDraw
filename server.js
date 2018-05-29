@@ -5,7 +5,8 @@ const config = require('./webpack.dev.config.js');
 const options = {
   contentBase: './dist',
   hot: true,
-  host: 'localhost'
+  host: 'localhost',
+  historyApiFallback: true
 };
 
 webpackDevServer.addDevServerEntrypoints(config, options);
