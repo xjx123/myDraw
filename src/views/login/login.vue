@@ -21,6 +21,7 @@ export default {
             e.preventDefault();
             console.log(`name: ${this.userName}  pass: ${this.passWord}`);
             if (this.userName === 'xjx' && this.passWord === '123') {
+                localStorage.setItem('userName', this.userName);
                 this.$router.push('/home');
             }
         }
