@@ -15,7 +15,8 @@ const router = createRouter();
 
 router.beforeEach((to, from, next) => {
     console.log("to: ", to);
-    // if (to.fullPath !== '/login') {
+    console.log("userName: ", localStorage.getItem('userName'));
+    // if (!localStorage.getItem('userName')) {
     //     next({ path: '/login'})
     // } else {
     //     next();
