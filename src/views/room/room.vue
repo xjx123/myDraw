@@ -9,7 +9,7 @@
         <div class="room-margin-top">
             <ul class="room-list">
                 <li v-for="item in roomList" :key="item.id">
-                    <a href="javasrcipt: void(0)" @click="handleSitDown(item.id)">{{ item.name }}</a>
+                    <a href="javascript: void(0)" @click="handleSitDown(item.id)">{{ item.name }}</a>
                 </li>
             </ul>
 
