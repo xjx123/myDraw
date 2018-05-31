@@ -14,14 +14,13 @@ Vue.use(Mint);
 const router = createRouter();
 
 router.beforeEach((to, from, next) => {
-    console.log("to: ", to);
-    console.log("userName: ", localStorage.getItem('userName'));
-    // if (!localStorage.getItem('userName')) {
-    //     next({ path: '/login'})
-    // } else {
-    //     next();
-    // }
-    next();
+    if (!localStorage.getItem('userName') && to.fullPath !== '/login') {
+        next({ path: '/login' })
+    } else if (to.fullPath === '/') {
+        next({ path: '/home' })
+    } else {
+        next();
+    }
 })
 
 new Vue({
