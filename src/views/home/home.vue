@@ -11,7 +11,6 @@
             </button>
         </div>
     </div>
-
 </template>
 
 <script>
@@ -31,13 +30,13 @@ export default {
 
 <style>
 .home-background {
-  background-color: #26a2ff;
+    background-color: #26a2ff;
 }
 
 .home-msgbox-wrapper {
-  top: 50%;
-  position: absolute;
-  width: 95%;
+    top: 50%;
+    position: absolute;
+    width: 95%;
 }
 </style>
 

@@ -8,12 +8,15 @@
 
         <div class="room-margin-top">
             <ul class="room-list">
-                <li v-for="item in roomList" :key="item.id">
-                    <a href="javascript: void(0)" @click="handleSitDown(item.id)">{{ item.name }}</a>
+                <li v-for="item in roomList" :key="item.roomId">
+                    <a href="javascript: void(0)" @click="handleSitDown(item.roomId)">{{ item.name }}</a>
                 </li>
             </ul>
 
-            <button :disabled="canStartGame" class="room-startGame-button mint-button mint-button--submit mint-button--large" @click="startGame">
+            <button v-if="canStartGame" class="room-startGame-button mint-button mint-button--submit mint-button--large" @click="startGame">
+                <label class="login-label mint-button-text">开始游戏</label>
+            </button>
+            <button v-else disabled='false' class="room-startGame-button mint-button mint-button--submit mint-button--large">
                 <label class="login-label mint-button-text">只有房主才能开始游戏</label>
             </button>
         </div>
@@ -25,43 +28,50 @@ export default {
     data() {
         return {
             userName: localStorage.getItem('userName'),
-            canStartGame: false,
             roomList: []
         }
     },
     mounted() {
         for (let i = 1; i <= 8; i++) {
             this.roomList.push({
-                id: i,
+                roomId: i,
                 name: i,
+                userId: null,
                 isHomeOwner: false
             })
         }
     },
     methods: {
-        handleSitDown(id) {
+        handleSitDown(roomId) {
             this.roomList.map(x => {
                 if (x.name === this.userName) {
-                    x.name = x.id;
+                    x.name = x.roomId;
+                    x.userId = null;
                     x.isHomeOwner = false;
                 }
             })
 
             this.roomList.map(x => {
-                if (x.id === id) {
+                if (x.roomId === roomId) {
                     if (x.isHomeOwner) {
                         return x;
                     }
 
                     x.isHomeOwner = true;
                     x.name = this.userName;
+                    x.userId = localStorage.getItem('userId');
                 }
 
                 return x;
             })
         },
         startGame() {
-
+            this.$router.push('/game');
+        }
+    },
+    computed: {
+        canStartGame() {
+            return this.roomList.some(x => (x.userId === localStorage.getItem('userId') && x.roomId === 1));
         }
     }
 }
