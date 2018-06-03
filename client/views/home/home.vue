@@ -6,9 +6,7 @@
             </router-link>
         </mt-header>
         <div class="home-msgbox-wrapper">
-            <button class="room-startGame-button mint-button mint-button--submit mint-button--large" @click="createRoom">
-                <label class="login-label mint-button-text">创建房间</label>
-            </button>
+            <mt-button type='primary' size='large' @click="createRoom">创建房间</mt-button>
         </div>
     </div>
 </template>

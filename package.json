@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --config webpack.dev.config.js",
-    "dev": "node server.js"
+    "dev:test": "cross-env NODE_ENV=development webpack-dev-server --config webpack.dev.config.js",
+    "dev:client": "node server.js",
+    "dev:server": "nodemon server/server.js"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +16,7 @@
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.1",
+    "cross-env": "^5.1.6",
     "css-loader": "^0.28.11",
     "html-webpack-plugin": "^2.30.1",
     "mint-ui": "^2.2.13",
@@ -26,6 +29,10 @@
     "webpack-dev-server": "^2.11.1"
   },
   "dependencies": {
+    "axios": "^0.18.0",
+    "koa": "^2.5.1",
+    "koa-router": "^7.4.0",
+    "mysql": "^2.15.0",
     "vue": "^2.5.13",
     "ws": "^4.1.0"
   }

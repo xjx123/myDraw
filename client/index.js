@@ -14,7 +14,7 @@ Vue.use(Mint);
 const router = createRouter();
 
 router.beforeEach((to, from, next) => {
-    if (!localStorage.getItem('userName') && to.fullPath !== '/login') {
+    if ((!localStorage.getItem('userName') || !localStorage.getItem('userId')) && to.fullPath !== '/login') {
         next({ path: '/login' })
     } else if (to.fullPath === '/') {
         next({ path: '/home' })
@@ -27,3 +27,7 @@ new Vue({
     router,
     render: h => h(App)
 }).$mount('#app')
+
+document.addEventListener('touchmove', e => {
+    e.preventDefault()
+}, false);

@@ -4,7 +4,7 @@ const webpack = require('webpack');
 
 module.exports = {
     entry: {
-        app: './src/index.js'
+        app: './client/index.js'
     },
     output: {
         filename: '[name].js',
@@ -40,6 +40,20 @@ module.exports = {
                 ]
             }
         ]
+    },
+    // 配置启动选项和api选项
+    devServer: {
+        port: 8000,
+        host: '0.0.0.0',
+        overlay: {
+            errors: true
+        },
+        headers: { 'Access-Control-Allow-Origin': '*' },
+        historyApiFallback: true,
+        proxy: {
+            '/api': 'http://127.0.0.1:3333'
+        },
+        hot: true
     },
     // 解释在这 https://github.com/vuejs-templates/webpack/issues/215 
     resolve: {

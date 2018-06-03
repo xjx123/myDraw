@@ -9,12 +9,18 @@
 </template>
 
 <script>
+import api from '../../model/model';
+
 export default {
     data() {
         return {
             userName: '',
             passWord: ''
         }
+    },
+    async mounted() {
+        let data = await api.getUserInfo()
+        console.log("login getuserinfo: ", data);
     },
     methods: {
         login(e) {
@@ -32,11 +38,11 @@ export default {
 
 <style>
 .login-button {
-    background-color: #26a2ff;
+  background-color: #26a2ff;
 }
 
 .login-label {
-    color: #fff;
+  color: #fff;
 }
 </style>
 

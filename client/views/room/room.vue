@@ -13,12 +13,8 @@
                 </li>
             </ul>
 
-            <button v-if="canStartGame" class="room-startGame-button mint-button mint-button--submit mint-button--large" @click="startGame">
-                <label class="login-label mint-button-text">开始游戏</label>
-            </button>
-            <button v-else disabled='false' class="room-startGame-button mint-button mint-button--submit mint-button--large">
-                <label class="login-label mint-button-text">只有房主才能开始游戏</label>
-            </button>
+            <mt-button type='primary' size='large' v-if="canStartGame" @click="startGame">开始游戏</mt-button>
+            <mt-button type='primary' v-else disabled size='large'>只有房主才能开始游戏</mt-button>
         </div>
     </div>
 </template>
@@ -79,44 +75,44 @@ export default {
 
 <style>
 .room-margin-top {
-    margin-top: 50px;
+  margin-top: 50px;
 }
 
 .room-list {
-    padding-left: 20px;
-    font-size: 12px;
-    font-weight: bolder;
-    overflow: hidden;
+  padding-left: 20px;
+  font-size: 12px;
+  font-weight: bolder;
+  overflow: hidden;
 }
 
 .room-list li {
-    margin: 10px;
-    list-style-image: none;
-    list-style-type: none;
-    background-color: #999999;
-    border-right-width: 0px;
-    border-right-style: solid;
-    border-right-color: #000000;
-    float: left;
-    width: 70px;
-    height: 45px;
-    box-shadow: 0px 5px 5px #000000;
+  margin: 10px;
+  list-style-image: none;
+  list-style-type: none;
+  background-color: #999999;
+  border-right-width: 0px;
+  border-right-style: solid;
+  border-right-color: #000000;
+  float: left;
+  width: 70px;
+  height: 45px;
+  box-shadow: 0px 5px 5px #000000;
 }
 
 .room-list li a {
-    color: #FFFFFF;
-    text-decoration: none;
-    margin: 0px;
-    display: block;
-    text-align: center;
-    line-height: 45px;
+  color: #ffffff;
+  text-decoration: none;
+  margin: 0px;
+  display: block;
+  text-align: center;
+  line-height: 45px;
 }
 
 .room-list li a:hover {
-    background-color: #0099CC;
+  background-color: #0099cc;
 }
 
 .room-startGame-button {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 </style>
