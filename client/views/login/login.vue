@@ -38,11 +38,11 @@ export default {
 
 <style>
 .login-button {
-  background-color: #26a2ff;
+    background-color: #26a2ff;
 }
 
 .login-label {
-  color: #fff;
+    color: #fff;
 }
 </style>
 
