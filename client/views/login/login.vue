@@ -19,12 +19,14 @@ export default {
         }
     },
     async mounted() {
-        let data = await api.getUserInfo()
-        console.log("login getuserinfo: ", data);
+     //   let data = await api.getUserInfo();
+     //   console.log("login getuserinfo: ", data);
     },
     methods: {
         login(e) {
             e.preventDefault();
+            
+        this.$webSocket.send('xjx webSocket send data');
             console.log(`name: ${this.userName}  pass: ${this.passWord}`);
             if (this.userName === 'xjx' && this.passWord === '123') {
                 localStorage.setItem('userName', this.userName);

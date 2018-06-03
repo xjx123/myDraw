@@ -14,6 +14,17 @@ Vue.use(Mint);
 const router = createRouter();
 
 router.beforeEach((to, from, next) => {
+    if (!Vue.prototype.$webSocket) {
+        const webSocket = new WebSocket('ws://localhost:3333/ws/');
+        console.log("beforeEach webSocket: ",webSocket);
+        webSocket.onmessage = (event) => {
+            var data = event.data;
+            console.log("webSocket onmessage: ", data);
+        }
+
+        Vue.prototype.$webSocket = webSocket;
+    }
+
     if ((!localStorage.getItem('userName') || !localStorage.getItem('userId')) && to.fullPath !== '/login') {
         next({ path: '/login' })
     } else if (to.fullPath === '/') {
