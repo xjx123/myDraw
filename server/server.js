@@ -1,7 +1,7 @@
 const Koa = require('koa');
 const KoaBody = require('koa-body');
 const apiRouter = require('./routers/api');
-const createWebSocket = require('./web_socket/web_socket');
+const createWebSocket = require('./websocket/websocket');
 
 const app = new Koa();
 app.use(KoaBody());

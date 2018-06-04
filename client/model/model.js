@@ -40,10 +40,12 @@ export default {
         return handleRequest(request.get('/api/getUserInfo'));
     },
     login(query) {
-        console.log("vue login query: ", query.userName);
-        return handleRequest(request.post('/api/login',{
+        return handleRequest(request.post('/api/login', {
             userName: query.userName,
             passWord: query.passWord
         }));
+    },
+    getRoomList() {
+        return handleRequest(request.get('/api/getRoomList'));
     }
 }

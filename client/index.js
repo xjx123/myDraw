@@ -20,8 +20,12 @@ router.beforeEach((to, from, next) => {
         const webSocket = new WebSocket('ws://localhost:3333/ws/');
         console.log("beforeEach webSocket: ", webSocket);
         webSocket.onmessage = (event) => {
-            var data = event.data;
-            console.log("webSocket onmessage: ", data);
+            console.log("webSocket onmessage: ", event.data);
+            var data = JSON.parse(event.data);
+            switch(data.type){
+                case 'addRoom':
+                    this.$store.commit('addRoomList', data.data);
+            }
         }
 
         Vue.prototype.$webSocket = webSocket;

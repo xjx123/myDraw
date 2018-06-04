@@ -18,7 +18,8 @@ export default [
         component: Home
     },
     {
-        path: '/room',
+        name: 'room',
+        path: '/room/:id',
         component: Room
     },
     {

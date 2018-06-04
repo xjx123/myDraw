@@ -1,21 +1,26 @@
 const { sqlQuery } = require('../db/db');
 
 async function getUserInfo() {
-    let sql = 'SELECT * FROM user_info;';
-    let dataList = await sqlQuery(sql);
+    let sql = 'SELECT * FROM user_info';
 
-    return dataList;
+    return await sqlQuery(sql);
 }
 
 async function login(query) {
-    let sql = `SELECT * FROM user_info WHERE userName = ? AND passWord = ?;`
+    let sql = `SELECT * FROM user_info WHERE userName = ? AND passWord = ?`
     let values = [query.userName, query.passWord];
-    let dataList = await sqlQuery(sql, values);
 
-    return dataList;
+    return await sqlQuery(sql, values);
+}
+
+async function getRoomList() {
+    let sql = 'SELECT * FROM draw_room WHERE status = 1';
+
+    return await sqlQuery(sql);
 }
 
 module.exports = {
-    getUserInfo: getUserInfo,
-    login: login
+    getUserInfo,
+    login,
+    getRoomList
 }

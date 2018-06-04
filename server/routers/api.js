@@ -20,5 +20,9 @@ apiRouter
         const data = await apiController.login(ctx.request.body);
         ctx.body = successResponse(data);
     })
+    .get('/getRoomList', async (ctx) => {
+        const data = await apiController.getRoomList();
+        ctx.body = successResponse(data);
+    })
 
 module.exports = apiRouter;

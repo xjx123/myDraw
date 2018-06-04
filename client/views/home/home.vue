@@ -5,6 +5,9 @@
                 <mt-button icon="back">返回</mt-button>
             </router-link>
         </mt-header>
+        <div class="home-margin-top">
+            <mt-button class="home-button-margin-top" type='default' size='large' v-for="room in roomList" :key="room.id" @click="goToRoom(room.id)">{{room.name}}</mt-button>
+        </div>
         <div class="home-msgbox-wrapper">
             <mt-button type='primary' size='large' @click="createRoom">创建房间</mt-button>
         </div>
@@ -13,15 +16,17 @@
 
 <script>
 import { MessageBox } from 'mint-ui';
+import api from '../../model/model';
+import { mapState } from 'vuex';
 
 export default {
     data() {
         return {
-
         }
     },
-    mounted() {
-        
+    async mounted() {
+        let data = await api.getRoomList();
+        this.$store.commit('addRoomList', data);
     },
     methods: {
         createRoom() {
@@ -30,20 +35,34 @@ export default {
                 this.$webSocket.send(JSON.stringify({ data: { roomName: value, id: 1 }, type: 'createRoom' }));
             })
             // this.$router.push('/room');
+        },
+        goToRoom(roomId) {
+            this.$router.push({name: 'room', params: { id: roomId }});
         }
-    }
+    },
+    computed: mapState([
+        'roomList'
+    ])
 }
 </script>
 
 <style>
+.home-margin-top {
+  margin-top: 50px;
+}
+
+.home-button-margin-top {
+  margin-top: 10px;
+}
+
 .home-background {
-    background-color: #26a2ff;
+  background-color: #26a2ff;
 }
 
 .home-msgbox-wrapper {
-    top: 50%;
-    position: absolute;
-    width: 95%;
+  top: 50%;
+  position: absolute;
+  width: 95%;
 }
 </style>
 
