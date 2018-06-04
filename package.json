@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --config webpack.dev.config.js",
-    "dev:test": "cross-env NODE_ENV=development webpack-dev-server --config webpack.dev.config.js",
-    "dev:client": "node server.js",
+    "dev:client": "cross-env NODE_ENV=development webpack-dev-server --config webpack.dev.config.js",
+    "dev:node_client": "node server.js",
     "dev:server": "nodemon server/server.js"
   },
   "keywords": [],
@@ -32,6 +32,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "koa": "^2.5.1",
+    "koa-body": "^2.6.0",
     "koa-router": "^7.4.0",
     "mysql": "^2.15.0",
     "vue": "^2.5.13",

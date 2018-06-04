@@ -21,14 +21,14 @@ const handleRequest = (request) => {
             if (!data.success) {
                 return reject(createError(400, data));
             }
-                
+
             resolve(data.data);
-        }).catch(err =>{
+        }).catch(err => {
             const res = err.response;
             console.log('handleRequest err: ', res);
-            if(res && res.status === 401){
+            if (res && res.status === 401) {
                 reject(createError(401, 'need auth'));
-            }else{
+            } else {
                 reject(createError(400, 'no data'));
             }
         })
@@ -38,5 +38,12 @@ const handleRequest = (request) => {
 export default {
     getUserInfo() {
         return handleRequest(request.get('/api/getUserInfo'));
+    },
+    login(query) {
+        console.log("vue login query: ", query.userName);
+        return handleRequest(request.post('/api/login',{
+            userName: query.userName,
+            passWord: query.passWord
+        }));
     }
 }

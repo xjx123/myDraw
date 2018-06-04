@@ -12,15 +12,24 @@
 </template>
 
 <script>
+import { MessageBox } from 'mint-ui';
+
 export default {
     data() {
         return {
 
         }
     },
+    mounted() {
+        
+    },
     methods: {
         createRoom() {
-            this.$router.push('/room');
+            MessageBox.prompt('请输入房间名').then(({ value, action }) => {
+                console.log(`value: ${value}  action: ${action}`);
+                this.$webSocket.send(JSON.stringify({ data: { roomName: value, id: 1 }, type: 'createRoom' }));
+            })
+            // this.$router.push('/room');
         }
     }
 }

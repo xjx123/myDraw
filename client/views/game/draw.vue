@@ -33,6 +33,7 @@ export default {
             this.ctx.beginPath();
             this.ctx.moveTo(x, y);
             this.ctx.stroke();
+            this.$webSocket.send({}, 'draw');
         },
         move(e) {
             let { x, y } = this.getPoint(e);
