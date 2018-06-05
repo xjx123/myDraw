@@ -16,7 +16,6 @@ const createError = (code, msg) => {
 const handleRequest = (request) => {
     return new Promise((resolve, reject) => {
         request.then(res => {
-            console.log("handleRequest res: ", res);
             const data = res.data;
             if (!data) {
                 return reject(createError(400, 'no data'));

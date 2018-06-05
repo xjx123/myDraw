@@ -1,6 +1,8 @@
 export default {
     addRoomList(state, data) {
-        if (data.length > 0) {
+        if (data.length === 0) return;
+
+        if (data instanceof Array) {
             let roomIds = state.roomList.map(x => x.id);
             data = data.filter(x => roomIds.indexOf(x.id) === -1);
             state.roomList.push(...data);
