@@ -1,3 +1,5 @@
 export default {
-    roomList: []
+    roomList: [],
+    roomUserList: [],
+    roomId: ''
 }

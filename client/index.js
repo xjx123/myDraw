@@ -18,13 +18,23 @@ const store = createStore();
 router.beforeEach((to, from, next) => {
     if (!Vue.prototype.$webSocket) {
         const webSocket = new WebSocket('ws://localhost:3333/ws/');
-        console.log("beforeEach webSocket: ", webSocket);
         webSocket.onmessage = (event) => {
             console.log("webSocket onmessage: ", event.data);
             var data = JSON.parse(event.data);
-            switch(data.type){
+            switch (data.type) {
                 case 'addRoom':
-                    this.$store.commit('addRoomList', data.data);
+                    store.commit('addRoomList', data.data);
+                    break;
+                case 'addRoomUser':
+                    if (data.data.roomId === store.state.roomId) {
+                        store.commit('addRoomUser', {
+                            userId: data.data.userId,
+                            userName: localStorage.getItem('userName')
+                        });
+                    }
+                    break;
+                default:
+                    console.warn('webSocket onmessage not type!');
             }
         }
 

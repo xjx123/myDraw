@@ -32,37 +32,49 @@ export default {
         createRoom() {
             MessageBox.prompt('请输入房间名').then(({ value, action }) => {
                 console.log(`value: ${value}  action: ${action}`);
-                this.$webSocket.send(JSON.stringify({ data: { roomName: value, id: 1 }, type: 'createRoom' }));
+                this.$webSocket.send(JSON.stringify({ data: { roomName: value }, type: 'createRoom' }));
             })
             // this.$router.push('/room');
         },
         goToRoom(roomId) {
-            this.$router.push({name: 'room', params: { id: roomId }});
+            this.$webSocket.send(JSON.stringify({
+                data: {
+                    userId: Number(localStorage.getItem('userId')),
+                    roomId: roomId
+                },
+                type: 'addRoomUser'
+            }));
+
+            this.$store.commit('setRoomId', roomId);
+            this.$store.commit('deleteRoomUser');
+            this.$router.push({ name: 'room', params: { id: roomId } });
         }
     },
-    computed: mapState([
-        'roomList'
-    ])
+    computed: {
+        ...mapState({
+            roomList: state => state.roomList
+        })
+    }
 }
 </script>
 
 <style>
 .home-margin-top {
-  margin-top: 50px;
+    margin-top: 50px;
 }
 
 .home-button-margin-top {
-  margin-top: 10px;
+    margin-top: 10px;
 }
 
 .home-background {
-  background-color: #26a2ff;
+    background-color: #26a2ff;
 }
 
 .home-msgbox-wrapper {
-  top: 50%;
-  position: absolute;
-  width: 95%;
+    top: 50%;
+    position: absolute;
+    width: 95%;
 }
 </style>
 

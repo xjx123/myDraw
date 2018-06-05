@@ -37,7 +37,7 @@ export default {
                 localStorage.setItem('userName', rawData.userName);
                 localStorage.setItem('userId', rawData.id);
                 this.$router.push('/home');
-            }else{
+            } else {
                 this.errorMessage = 'userName or password error!';
             }
         }

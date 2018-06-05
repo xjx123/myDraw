@@ -8,8 +8,8 @@
 
         <div class="room-margin-top">
             <ul class="room-list">
-                <li v-for="item in roomList" :key="item.roomId">
-                    <a href="javascript: void(0)" @click="handleSitDown(item.roomId)">{{ item.name }}</a>
+                <li v-for="item in showUserList" :key="item.seatId">
+                    <a href="javascript: void(0)" @click="handleSitDown(item.seatId)">{{ item.name }}</a>
                 </li>
             </ul>
 
@@ -20,40 +20,39 @@
 </template>
 
 <script>
+import api from '../../model/model';
+import { mapState } from 'vuex';
+
 export default {
     data() {
         return {
             userName: localStorage.getItem('userName'),
-            roomList: []
+            defaultUserList: [],
         }
     },
-    mounted() {
+    async mounted() {
         for (let i = 1; i <= 8; i++) {
-            this.roomList.push({
-                roomId: i,
+            this.defaultUserList.push({
+                seatId: i,
                 name: i,
-                userId: null,
-                isHomeOwner: false
+                userId: null
             })
         }
+
+        let users = await api.getRoomUserList(this.$route.params.id);
+        this.$store.commit('addRoomUser', users);
     },
     methods: {
-        handleSitDown(roomId) {
-            this.roomList.map(x => {
+        handleSitDown(seatId) {
+            this.defaultUserList.map(x => {
                 if (x.name === this.userName) {
-                    x.name = x.roomId;
+                    x.name = x.seatId;
                     x.userId = null;
-                    x.isHomeOwner = false;
                 }
             })
 
-            this.roomList.map(x => {
-                if (x.roomId === roomId) {
-                    if (x.isHomeOwner) {
-                        return x;
-                    }
-
-                    x.isHomeOwner = true;
+            this.defaultUserList.map(x => {
+                if (x.seatId === seatId) {
                     x.name = this.userName;
                     x.userId = localStorage.getItem('userId');
                 }
@@ -62,57 +61,73 @@ export default {
             })
         },
         startGame() {
-            this.$router.push('/game');
+            console.log("this.roomId: ", this.roomId);
+            console.log("roomUserList: ", this.roomUserList);
+            // this.$router.push(`/game/${this.roomId}`);
         }
     },
     computed: {
         canStartGame() {
-            return this.roomList.some(x => (x.userId === localStorage.getItem('userId') && x.roomId === 1));
-        }
+            return this.defaultUserList.some(x => (x.userId === localStorage.getItem('userId') && x.seatId === 1));
+        },
+        showUserList: {
+            get() {
+                return this.defaultUserList;
+            },
+            set() {
+                let tempList = this.roomUserList.some(x => {
+                    
+                })
+            }
+        },
+        ...mapState({
+            roomUserList: state => state.roomUserList,
+            roomId: state => state.roomId
+        })
     }
 }
 </script>
 
 <style>
 .room-margin-top {
-  margin-top: 50px;
+    margin-top: 50px;
 }
 
 .room-list {
-  padding-left: 20px;
-  font-size: 12px;
-  font-weight: bolder;
-  overflow: hidden;
+    padding-left: 20px;
+    font-size: 12px;
+    font-weight: bolder;
+    overflow: hidden;
 }
 
 .room-list li {
-  margin: 10px;
-  list-style-image: none;
-  list-style-type: none;
-  background-color: #999999;
-  border-right-width: 0px;
-  border-right-style: solid;
-  border-right-color: #000000;
-  float: left;
-  width: 70px;
-  height: 45px;
-  box-shadow: 0px 5px 5px #000000;
+    margin: 10px;
+    list-style-image: none;
+    list-style-type: none;
+    background-color: #999999;
+    border-right-width: 0px;
+    border-right-style: solid;
+    border-right-color: #000000;
+    float: left;
+    width: 70px;
+    height: 45px;
+    box-shadow: 0px 5px 5px #000000;
 }
 
 .room-list li a {
-  color: #ffffff;
-  text-decoration: none;
-  margin: 0px;
-  display: block;
-  text-align: center;
-  line-height: 45px;
+    color: #ffffff;
+    text-decoration: none;
+    margin: 0px;
+    display: block;
+    text-align: center;
+    line-height: 45px;
 }
 
 .room-list li a:hover {
-  background-color: #0099cc;
+    background-color: #0099cc;
 }
 
 .room-startGame-button {
-  margin-top: 20px;
+    margin-top: 20px;
 }
 </style>

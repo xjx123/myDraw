@@ -9,6 +9,7 @@ broadcast = (wss, data) => {
 module.exports = async (wss, ws, message) => {
     console.log('websocket send message: ', message);
     const messageData = JSON.parse(message);
+    let data;
     switch (messageData.type) {
         case 'createRoom':
             let createRoomData = {
@@ -18,7 +19,7 @@ module.exports = async (wss, ws, message) => {
                 isPublic: messageData.data.isPublic
             }
 
-            let data = await webSocketController.createRoom(createRoomData);
+            data = await webSocketController.createRoom(createRoomData);
             broadcast(wss, JSON.stringify({
                 data: Object.assign({}, createRoomData, { id: data.insertId }),
                 type: 'addRoom'
@@ -26,7 +27,14 @@ module.exports = async (wss, ws, message) => {
 
             console.log(`createRoom data ${JSON.stringify(data)}`);
             break;
-        default: 
+        case 'addRoomUser':
+            data = await webSocketController.addRoomUser(messageData.data);
+            broadcast(wss, JSON.stringify({
+                data: messageData.data,
+                type: 'addRoomUser'
+            }))
+            break;
+        default:
             console.warn('websocket not send message type');
     }
     //   ws.send(msg);

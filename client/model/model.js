@@ -1,11 +1,14 @@
 import axios from 'axios';
 
 const request = axios.create({
-    baseURL: '/'
+    baseURL: '/',
+    headers: {
+        "Authorization": `Bearer 11111`
+    }
 })
 
 const createError = (code, msg) => {
-    const err = new Error('no data111');
+    const err = new Error(msg);
     err.code = code;
     return err;
 }
@@ -47,5 +50,8 @@ export default {
     },
     getRoomList() {
         return handleRequest(request.get('/api/getRoomList'));
+    },
+    getRoomUserList(roomId) {
+        return handleRequest(request.get(`/api/${roomId}/getRoomUserList`));
     }
 }
