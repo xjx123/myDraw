@@ -1,7 +1,10 @@
 import axios from 'axios';
 
+const isDev = process.env.NODE_ENV === 'development'
+console.log("isdev: ", isDev);
+
 const request = axios.create({
-    baseURL: '/',
+    baseURL: isDev ? 'http://localhost:3333' : 'http://draw.yaoleyaotou.xin:3333',
     headers: {
         "Authorization": `Bearer 11111`
     }
@@ -50,7 +53,13 @@ export default {
     getRoomList() {
         return handleRequest(request.get('/api/getRoomList'));
     },
-    getRoomUserList(roomId) {
-        return handleRequest(request.get(`/api/${roomId}/getRoomUserList`));
+    getRoomUserListByRoomId(roomId) {
+        return handleRequest(request.get(`/api/${roomId}/getRoomUserListByRoomId`));
+    },
+    getRoomIdByUserId(userId) {
+        return handleRequest(request.get(`/api/${userId}/getRoomIdByUserId`));
+    },
+    deleteRoomUserByUserId(userId) {
+        return handleRequest(request.delete(`/api/${userId}/deleteRoomUserByUserId`));
     }
 }

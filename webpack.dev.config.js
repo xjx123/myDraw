@@ -2,6 +2,8 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
+const isDev = process.env.NODE_ENV === 'development'
+
 module.exports = {
     entry: {
         app: './client/index.js'
@@ -9,7 +11,7 @@ module.exports = {
     output: {
         filename: '[name].js',
         path: path.resolve(__dirname, 'dist'),
-        publicPath: '/' // 确保文件资源能够正确的访问
+        publicPath: isDev ? '/' : './' // 确保文件资源能够正确的访问
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -38,6 +40,17 @@ module.exports = {
                     'style-loader',
                     'css-loader'
                 ]
+            },
+            {
+                test: /\.(png|jpg|jpeg|gif|svg|eot|svg|ttf|woff|woff2)$/,
+                use: [
+                    {
+                        loader: 'url-loader',
+                        options: {
+                            limit: 8192
+                        }
+                    }
+                ]
             }
         ]
     },
@@ -48,11 +61,7 @@ module.exports = {
         overlay: {
             errors: true
         },
-        headers: { 'Access-Control-Allow-Origin': '*' },
         historyApiFallback: true,
-        proxy: {
-            '/api': 'http://127.0.0.1:3333'
-        },
         hot: true
     },
     // 解释在这 https://github.com/vuejs-templates/webpack/issues/215 

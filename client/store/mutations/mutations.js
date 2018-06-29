@@ -10,20 +10,38 @@ export default {
             state.roomList.push(data);
         }
     },
-    setRoomId(state, roomId) {
-        state.roomId = roomId;
-    },
-    addRoomUser(state, userIds) {
-        if (userIds instanceof Array) {
-            userIds = userIds.filter(x => state.roomUserList.indexOf(x) === -1);
-            state.roomUserList.push(...userIds);
-            return;
-        }
+    addRoomUser(state, users) {
+        if (users instanceof Array) {
+            state.roomUserList.unshift(...users);
+            let roomUserList = [];
+            state.roomUserList.forEach(x => {
+                if (roomUserList.length === 0) {
+                    roomUserList.push(x);
+                } else {
+                    let userIds = roomUserList.map(x => x.userId);
+                    if (userIds.indexOf(x.userId) === -1) {
+                        roomUserList.push(x);
+                    }
+                }
+            });
 
-        if (state.roomUserList.indexOf(userIds) > -1) return;
-        state.roomUserList.push(userIds);
+            state.roomUserList = roomUserList;
+        } else {
+            let userIds = state.roomUserList.map(x => x.userId);
+            if (userIds.indexOf(users.userId) > -1) return;
+            state.roomUserList.push(users);
+        }
     },
     deleteRoomUser(state) {
         state.roomUserList = [];
+    },
+    drawPicture(state, data) {
+        state.drawPictureData = data;
+    },
+    setGameInfo(state, data) {
+        state.gameInfo = data;
+    },
+    setShowAnswerInfo(state, data) {
+        state.showAnswerInfo = Object.assign({}, state.showAnswerInfo, data);
     }
 }

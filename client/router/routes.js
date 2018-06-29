@@ -1,29 +1,30 @@
-import App from '../app.vue';
-import Login from '../views/login/login.vue';
-import Home from '../views/home/home.vue';
-import Room from '../views/room/room.vue';
-import Game from '../views/game/game.vue';
+// import App from '../App.vue';
+// import Login from '../views/login/login.vue';
+// import Home from '../views/home/home.vue';
+// import Room from '../views/room/room.vue';
+// import Game from '../views/game/game.vue';
 
 export default [
     {
         path: '/',
-        component: App
+        component: () => import('../App.vue')
     },
     {
         path: '/login',
-        component: Login
+        component: () => import('../views/login/login.vue')
     },
     {
         path: '/home',
-        component: Home
+        component: () => import('../views/home/home.vue')
     },
     {
         name: 'room',
-        path: '/room/:id',
-        component: Room
+        path: '/room/:roomId',
+        component: () => import('../views/room/room.vue')
     },
     {
-        path: '/game',
-        component: Game
+        name: 'game',
+        path: '/game/:roomId',
+        component: () => import('../views/game/game.vue')
     }
 ]

@@ -1,24 +1,72 @@
 <template>
     <div>
-        <div>
-            <p class="game-spacing">我画: {{drawName}} ({{drawType}})</p>
-            <p style="float:right;" class="game-spacing">{{countDown}}</p>
+        <mt-header>
+            <div slot="left">{{canDraw ? '我画：': '提示：'}}{{drawName}}</div>
+            <div slot="right">{{ gameTime}}</div>
+        </mt-header>
+        <draw :room-id="roomId" :can-draw="canDraw"></draw>
+        <div v-if="!canDraw" class="game-features">
+            <input placeholder="输入答案" class="game-input" v-model="drawAnswer"></input>
+            <mt-button class="game-button" size="normal" type="primary" @click="submitAnswer">提交</mt-button>
         </div>
-        <draw />
     </div>
 </template>
 
 <script>
 import Draw from './draw.vue';
+import api from '../../model/model';
+import { mapState } from 'vuex';
+import { MessageBox } from 'mint-ui';
 
 export default {
     components: { Draw },
     data() {
         return {
-            drawName: '摇了摇头',
-            drawType: '词语',
-            countDown: 90
+            drawName: '',
+            gameTime: 0,
+            roomId: null,
+            canDraw: false,
+            drawAnswer: '',
+            roomUserList: []
         }
+    },
+    async mounted() {
+        this.roomId = this.$route.params.roomId;
+
+        // let users = await api.getRoomUserListByRoomId(this.roomId);
+        // if ((users ? users[0].userId : null) === Number(localStorage.getItem('userId'))
+        //     && (users ? users[0].userName : null) === localStorage.getItem('userName')) {
+        //     this.canDraw = true;
+        // }
+    },
+    methods: {
+        submitAnswer() {
+            console.log("drawAnswer: ", this.drawAnswer);
+        }
+    },
+    watch: {
+        gameInfo(newVal, oldVal) {
+            this.canDraw = newVal.drawUserId === Number(localStorage.getItem('userId'));
+            this.drawName = newVal.topicName || newVal.topicPrompt;
+            this.gameTime = newVal.gameTime;
+            this.roomUserList = newVal.roomUserList;
+            if (newVal.gameTime === 10) {
+                console.log("newVal: ", newVal);
+            }
+        },
+        showAnswerInfo(newVal, oldVal) {
+            if (newVal.showAnswer) {
+                // 弹窗
+                MessageBox('本轮答案', this.showAnswerInfo.topicName);
+                this.$store.commit('setShowAnswerInfo', { showAnswer: false });
+            }
+        }
+    },
+    computed: {
+        ...mapState({
+            gameInfo: state => state.gameInfo,
+            showAnswerInfo: state => state.showAnswerInfo
+        })
     }
 }
 </script>
@@ -27,7 +75,32 @@ export default {
 .game-spacing {
     margin-top: 4px;
     margin-bottom: 4px;
-    float:left;
+    float: left;
+}
+
+.game-features {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.game-input {
+    margin: 5px;
+    text-align: left;
+    border: 1px solid #26a2ff;
+    background-color: transparent;
+    color: #000;
+    display: block;
+    width: 100%;
+    font-size: 18px;
+    height: 41px;
+    outline: 0;
+    position: relative;
+}
+
+.game-button {
+    margin: 5px;
+    width: 100px;
 }
 </style>
-

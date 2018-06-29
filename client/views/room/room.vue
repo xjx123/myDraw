@@ -1,19 +1,19 @@
 <template>
     <div>
-        <mt-header fixed :title="userName + '的房间'">
+        <mt-header fixed :title="myUserName + '的房间'">
             <router-link to="/home" slot="left">
-                <mt-button icon="back">返回</mt-button>
+                <mt-button icon="back" @click="backToHome">返回</mt-button>
             </router-link>
         </mt-header>
 
         <div class="room-margin-top">
             <ul class="room-list">
                 <li v-for="item in showUserList" :key="item.seatId">
-                    <a href="javascript: void(0)" @click="handleSitDown(item.seatId)">{{ item.name }}</a>
+                    <a href="javascript: void(0)">{{ item.userName }}</a>
                 </li>
             </ul>
 
-            <mt-button type='primary' size='large' v-if="canStartGame" @click="startGame">开始游戏</mt-button>
+            <mt-button type='primary' :disabled="!canStart" size='large' v-if="canStartGame" @click="startGame">{{canStart ? '开始游戏' : '大于2人才能开始游戏'}}</mt-button>
             <mt-button type='primary' v-else disabled size='large'>只有房主才能开始游戏</mt-button>
         </div>
     </div>
@@ -26,63 +26,50 @@ import { mapState } from 'vuex';
 export default {
     data() {
         return {
-            userName: localStorage.getItem('userName'),
-            defaultUserList: [],
+            myUserName: localStorage.getItem('userName'),
+            roomId: ''
         }
     },
     async mounted() {
-        for (let i = 1; i <= 8; i++) {
-            this.defaultUserList.push({
-                seatId: i,
-                name: i,
-                userId: null
-            })
-        }
-
-        let users = await api.getRoomUserList(this.$route.params.id);
+        this.roomId = this.$route.params.roomId;
+        localStorage.setItem('roomId', this.roomId);
+        let users = await api.getRoomUserListByRoomId(this.roomId);
         this.$store.commit('addRoomUser', users);
     },
     methods: {
-        handleSitDown(seatId) {
-            this.defaultUserList.map(x => {
-                if (x.name === this.userName) {
-                    x.name = x.seatId;
-                    x.userId = null;
-                }
-            })
-
-            this.defaultUserList.map(x => {
-                if (x.seatId === seatId) {
-                    x.name = this.userName;
-                    x.userId = localStorage.getItem('userId');
-                }
-
-                return x;
-            })
-        },
         startGame() {
-            console.log("this.roomId: ", this.roomId);
-            console.log("roomUserList: ", this.roomUserList);
-            // this.$router.push(`/game/${this.roomId}`);
+            this.$webSocket.send(JSON.stringify({
+                data: {
+                    roomId: this.roomId
+                },
+                type: 'startGame'
+            }));
+        },
+        backToHome() {
+            localStorage.removeItem('roomId');
+            api.deleteRoomUserByUserId(Number(localStorage.getItem('userId')));
         }
     },
     computed: {
         canStartGame() {
-            return this.defaultUserList.some(x => (x.userId === localStorage.getItem('userId') && x.seatId === 1));
+            return this.showUserList.some(x => (x.userId === Number(localStorage.getItem('userId')) && x.seatId === 0));
         },
-        showUserList: {
-            get() {
-                return this.defaultUserList;
-            },
-            set() {
-                let tempList = this.roomUserList.some(x => {
-                    
-                })
-            }
+        showUserList() {
+            return [0, 0, 0, 0, 0, 0, 0, 0].map((_, i) => {
+                let data = {
+                    seatId: i,
+                    userName: this.roomUserList[i] ? this.roomUserList[i].userName : null,
+                    userId: this.roomUserList[i] ? this.roomUserList[i].userId : null,
+                }
+
+                return data;
+            });
+        },
+        canStart() {
+            return this.roomUserList.length > 1
         },
         ...mapState({
-            roomUserList: state => state.roomUserList,
-            roomId: state => state.roomId
+            roomUserList: state => state.roomUserList
         })
     }
 }

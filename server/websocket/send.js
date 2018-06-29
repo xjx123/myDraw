@@ -1,4 +1,5 @@
 const webSocketController = require('../controllers/websocket');
+const { startGame } = require('./startGame');
 
 broadcast = (wss, data) => {
     wss.clients.forEach((client) => {
@@ -14,7 +15,7 @@ module.exports = async (wss, ws, message) => {
         case 'createRoom':
             let createRoomData = {
                 name: messageData.data.roomName,
-                createTime: new Date(),
+                createTime: messageData.data.createTime,
                 status: 1,
                 isPublic: messageData.data.isPublic
             }
@@ -25,18 +26,33 @@ module.exports = async (wss, ws, message) => {
                 type: 'addRoom'
             }));
 
-            console.log(`createRoom data ${JSON.stringify(data)}`);
             break;
         case 'addRoomUser':
             data = await webSocketController.addRoomUser(messageData.data);
             broadcast(wss, JSON.stringify({
                 data: messageData.data,
                 type: 'addRoomUser'
-            }))
+            }));
+
+            break;
+        case 'startGame':
+            broadcast(wss, JSON.stringify({
+                data: messageData.data,
+                type: 'startGame'
+            }));
+
+            let roomId = messageData.data.roomId;
+            startGame(wss, roomId);
+
+            break;
+        case 'drawPicture':
+            broadcast(wss, JSON.stringify({
+                data: messageData.data,
+                type: 'drawPicture'
+            }));
+
             break;
         default:
             console.warn('websocket not send message type');
     }
-    //   ws.send(msg);
-    //   broadcast(wss, msg);
 }

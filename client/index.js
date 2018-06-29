@@ -1,44 +1,29 @@
 import Vue from 'vue';
-import App from './app.vue';
-import Mint from 'mint-ui';
+import App from './App.vue';
+import { Button, Header, Field } from 'mint-ui';
 import VueX from 'vuex';
 import VueRouter from 'vue-router';
 import createRouter from './router/router';
 import createStore from './store/store';
+import createWebSocket from './websocket';
 
 import 'mint-ui/lib/style.css';
+import './assets/styles/iconfont/iconfont.js';
+import './assets/styles/global.css';
 
 Vue.use(VueRouter);
 Vue.use(VueX);
-Vue.use(Mint);
+//Vue.use(Mint);
+Vue.component(Button.name, Button);
+Vue.component(Header.name, Header);
+Vue.component(Field.name, Field);
 
 const router = createRouter();
 const store = createStore();
 
 router.beforeEach((to, from, next) => {
     if (!Vue.prototype.$webSocket) {
-        const webSocket = new WebSocket('ws://localhost:3333/ws/');
-        webSocket.onmessage = (event) => {
-            console.log("webSocket onmessage: ", event.data);
-            var data = JSON.parse(event.data);
-            switch (data.type) {
-                case 'addRoom':
-                    store.commit('addRoomList', data.data);
-                    break;
-                case 'addRoomUser':
-                    if (data.data.roomId === store.state.roomId) {
-                        store.commit('addRoomUser', {
-                            userId: data.data.userId,
-                            userName: localStorage.getItem('userName')
-                        });
-                    }
-                    break;
-                default:
-                    console.warn('webSocket onmessage not type!');
-            }
-        }
-
-        Vue.prototype.$webSocket = webSocket;
+        Vue.prototype.$webSocket = createWebSocket(router, store);
     }
 
     if ((!localStorage.getItem('userName') || !localStorage.getItem('userId')) && to.fullPath !== '/login') {
@@ -56,6 +41,7 @@ new Vue({
     render: h => h(App)
 }).$mount('#app')
 
+// 阻止拖动屏幕
 document.addEventListener('touchmove', e => {
     e.preventDefault()
 }, false);
